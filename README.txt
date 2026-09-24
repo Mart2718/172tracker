@@ -1,17 +1,22 @@
-Math 172 Standards Tracker — Fall 2026 / Section 83301
+Math 172 Standards Tracker — Supabase edition
+Fall 2026 / Section 83301
 
-SET UP
-1. Extract this ZIP to a private folder on your computer.
-2. Open index.html in a current version of Chrome or Edge.
-3. The 36 students from the supplied roster are loaded when this browser opens the app for the first time. No student IDs are included in this package.
-4. Use Enter results to select an assessment and standard. Select a tier for each student. Entries save automatically in this browser.
-5. Use Student view to review four attempt slots, correct an entry, enter LRC/fluency/engagement points, and print a conference summary.
-6. Use Backup & setup to download a JSON backup after every grading session. Store backups securely. To use another computer, open the app there and restore the latest backup.
+SETUP
+1. Create a new Supabase project in your own account.
+2. In Authentication > Users, create one instructor user with your email and a strong password. Keep public sign-ups disabled. Confirm the user exists before the next step.
+3. Open the PRIVATE setup.sql file supplied separately. Replace INSTRUCTOR_EMAIL_HERE with the exact email of that user. Run the script in Supabase SQL Editor. It creates a tracker table, enables row-level security, and inserts the class roster. Run it only in your own project. Verify the query found your user: in Table Editor, the trackers table should have one row.
+4. From the project Connect dialog, copy the Project URL and publishable key (or find the key under Settings > API Keys). Edit config.js to place those two values between the quotes. Never use the service_role key, database password, or personal password in config.js.
+5. Open index.html from a private folder in Chrome or Edge. Sign in. Test one result and reload the page: it should remain saved, and the top status should say Saved to Supabase.
+6. If you want to access it from multiple computers, deploy ONLY index.html and config.js to Netlify. Do not publish setup.sql, roster files, or backups. The app files contain no student roster; the database policies permit only your signed-in user to access their tracker.
 
-DATA AND PRIVACY
-The app runs in the browser and uses IndexedDB on this device. It does not connect to Supabase, Canvas, or any server. The ZIP contains student names, so keep it private. The exported backup contains names and all grades. Avoid shared computers or browser guest/private modes. Clearing site data or moving the HTML file can cause the browser to treat it as a different storage location, so export a backup first. If your browser restricts storage for local files, use a local server or a different current browser; confirm an entry survives a close and reopen before relying on it.
+ENTRY
+Choose a standard category, then one of its standards, and enter each student's tier under Attempt 1–4. There is no assessment dropdown or assessment-source prompt. A blank slot means no recorded attempt, while N is a recorded Not yet. The default date is today; change it before entering earlier work. The student view lets you edit an attempt's date and optional source label, and enter points for LRC, Foundational Fluency, and Engagement.
+
+DROPPED STUDENTS
+The supplied CSV has no enrollment status column, so none could be identified as dropped automatically. Use Setup & scoring > Archive student to hide a dropped student from active views. Archiving keeps their existing records, and you can restore them later.
 
 SCORING
-One recorded attempt receives full tier value (P 100, C 75, B 50, N 0). With multiple attempts, the two highest tiers determine the standard percentage using the published anchor-and-confirm matrix. The other attempts stay on record. Unattempted standards contribute 0 to the 38-standard mastery average. Overall course grade uses the syllabus weights: mastery 65%, LRC 15%, fluency 10%, engagement 10%. Empty non-mastery components count as zero. This displayed course grade is a progress snapshot, not a final-grade projection.
+One attempt receives full tier value: P 100%, C 75%, B 50%, N 0%. With two or more attempts the two highest determine the published anchor-and-confirm score. The 38 standards are weighted equally; unattempted standards count as 0 in the current mastery snapshot. Course grade is mastery 65%, LRC 15%, fluency 10%, engagement 10%. Unentered components count as zero. The displayed course grade is current demonstrated progress, not a final-grade projection.
 
-This initial version is intended for one instructor and one class. It can later be connected to an authenticated Supabase project without changing the scoring rules.
+PRIVACY
+Keep setup.sql private: it contains student names. Do not share your login password. The publishable key is designed for browser use; row-level security is what protects the student data. If a save fails, stop entering results until the status returns to Saved to Supabase.
